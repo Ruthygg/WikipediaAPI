@@ -11,6 +11,34 @@
 library(rjson)
 library(RCurl) #important to parse wikitext http://stackoverflow.com/questions/21977480/problems-with-urlencode-in-r
 library(stringr)
+
+
+solveRedirect <- function (title, wiki="en") {
+  #  Returns the current title page
+  #' Args:
+  #'  title: The page title in wikipedia
+  #'  wiki: language of the page
+  #' Returns:
+  #'  The current title of the page 
+  title <-  gsub(" ","_",title)
+  title<- URLencode(title, reserved = TRUE)
+  page_title_url<- paste("https://", wiki,".wikipedia.org/w/api.php?action=query&titles=",title, "&redirects&format=json", sep="")
+  json_data <- rjson::fromJSON(file=page_title_url)
+  
+  if (length(json_data$query$redirects) > 1)
+    print(sprintf("Page %s has more than 1 redirect. Will take the first.", title))
+  
+  redirect <-  gsub(" ","_",json_data$query$redirects[[1]]$to)
+  
+  if(length(redirect)<=0){
+    redirect <- title
+    redirect<-URLdecode(redirect) 
+  }
+  return(redirect)
+}
+
+
+
 getPropinWikiText <- function (text, prop, wiki="en"){
   
 
