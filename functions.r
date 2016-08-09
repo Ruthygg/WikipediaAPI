@@ -296,6 +296,7 @@ getPageTitleinOtherLanguage <- function (page.title, wiki1, wiki2) {
 }
 
 getPageLinks <- function(title, plcontinue=NULL, namespace=0, wiki="en") {
+  
   if (!is.null(plcontinue)){
     url<-paste("https://", wiki,".wikipedia.org/w/api.php?action=query&titles=", title, "&prop=links&plnamespace=",namespace, 
                "&plcontinue=",plcontinue,"&pllimit=500&format=json", sep="")
